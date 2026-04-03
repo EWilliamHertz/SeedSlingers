@@ -66,7 +66,7 @@ export default defineConfig({
     aliases(),
     layoutWrapperPlugin(),
   ],
-  resolve: {
+resolve: {
     alias: {
       lodash: 'lodash-es',
       'npm:stripe': 'stripe',
