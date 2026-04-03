@@ -35,10 +35,14 @@ for (const method of ['log', 'info', 'warn', 'error', 'debug'] as const) {
   };
 }
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
-const adapter = NeonAdapter(pool);
+let _adapter: ReturnType<typeof NeonAdapter> | null = null;
+function getAdapter() {
+  if (!_adapter) {
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    _adapter = NeonAdapter(pool);
+  }
+  return _adapter;
+}
 
 const app = new Hono();
 
@@ -142,7 +146,7 @@ if (process.env.AUTH_SECRET) {
                   const { email, name, provider } = credentials;
                   if (!email || typeof email !== 'string') return null;
 
-                  const existing = await adapter.getUserByEmail(email);
+                  const existing = await getAdapter().getUserByEmail(email);
                   if (existing) return existing;
 
                   const allowedProviders = new Set(['google', 'facebook', 'twitter', 'apple']);
@@ -150,7 +154,7 @@ if (process.env.AUTH_SECRET) {
                     typeof provider === 'string' && allowedProviders.has(provider.toLowerCase())
                       ? provider.toLowerCase()
                       : 'google';
-                  const newUser = await adapter.createUser({
+                  const newUser = await getAdapter().createUser({
                     emailVerified: null,
                     email,
                     name:
@@ -158,7 +162,7 @@ if (process.env.AUTH_SECRET) {
                         ? name
                         : undefined,
                   });
-                  await adapter.linkAccount({
+                  await getAdapter().linkAccount({
                     type: 'oauth',
                     userId: newUser.id,
                     provider: providerName,
@@ -192,7 +196,7 @@ if (process.env.AUTH_SECRET) {
             }
 
             // logic to verify if user exists
-            const user = await adapter.getUserByEmail(email);
+            const user = await getAdapter().getUserByEmail(email);
             if (!user) {
               return null;
             }
@@ -238,15 +242,15 @@ if (process.env.AUTH_SECRET) {
             }
 
             // logic to verify if user exists
-            const user = await adapter.getUserByEmail(email);
+            const user = await getAdapter().getUserByEmail(email);
             if (!user) {
-              const newUser = await adapter.createUser({
+              const newUser = await getAdapter().createUser({
                 emailVerified: null,
                 email,
                 name: typeof name === 'string' && name.length > 0 ? name : undefined,
                 image: typeof image === 'string' && image.length > 0 ? image : undefined,
               });
-              await adapter.linkAccount({
+              await getAdapter().linkAccount({
                 extraData: {
                   password: await hash(password),
                 },
