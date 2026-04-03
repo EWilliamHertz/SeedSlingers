@@ -1304,8 +1304,17 @@ export default function CombatArena({
               </p>
             </div>
 
-            {isPlayerTurn && (
+            {isPlayerOrAllyTurn && (
               <div className="flex-1 flex flex-col">
+                {/* Show which party member is acting */}
+                {!currentAlly?.isPlayer && (
+                  <div className="bg-green-50 border-b-2 border-green-600 px-4 py-3">
+                    <p className="font-jetbrains text-xs tracking-widest uppercase text-green-700">
+                      🌿 {(currentAlly?.nickname || currentAlly?.name) || "Ally"}'s Turn
+                    </p>
+                  </div>
+                )}
+
                 {menuState === "main" && (
                   <nav className="flex flex-col">
                     {[
@@ -1427,10 +1436,10 @@ export default function CombatArena({
               </div>
             )}
 
-            {!isPlayerTurn && cur?.isAlly && gamePhase === "combat" && (
+            {!isPlayerOrAllyTurn && cur?.isAlly && gamePhase === "combat" && (
               <div className="flex-1 flex items-center justify-center p-6">
                 <p className="font-jetbrains text-xs tracking-widest uppercase text-green-600 text-center">
-                  ♦ Ally Acting...
+                  ♦ {(cur?.name || "Ally").toUpperCase()} is defeated...
                 </p>
               </div>
             )}
