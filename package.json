@@ -1,0 +1,23 @@
+{
+  "name": "seedslingers",
+  "version": "1.0.0",
+  "description": "SeedSlingers - Gaming application",
+  "private": true,
+  "workspaces": [
+    "anything/apps/web",
+    "anything/apps/mobile"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "start": "turbo run start",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck"
+  },
+  "devDependencies": {
+    "turbo": "^2.1.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
