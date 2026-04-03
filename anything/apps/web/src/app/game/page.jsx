@@ -639,49 +639,50 @@ export default function GamePage() {
         </div>
       </header>
 
-      <main className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-        <div className="flex-1 bg-neutral-50 border-b-4 lg:border-b-0 lg:border-r-4 border-black flex items-center justify-center p-4 min-h-[400px] overflow-hidden">
-          {gameState === "overworld" && playerData && (
-            <GameCanvas
-              playerData={playerData}
-              onEncounter={handleEncounter}
-              onPlayerMove={(pos) =>
-                setPlayerData((prev) =>
-                  prev
-                    ? { ...prev, position_x: pos.x, position_y: pos.y }
-                    : prev,
-                )
-              }
-              onScreenChange={(screen) => setCurrentScreen(screen)}
-              onNearbyPlayersUpdate={(players) => setNearbyPlayers(players)}
-              onPlayerClick={handlePlayerClick}
-            />
-          )}
-          {gameState === "combat" && currentEncounter && (
-            <CombatArena
-              playerData={playerData}
-              sproutSpecies={currentEncounter}
-              partySprouts={partySprouts}
-              onCombatEnd={handleCombatEnd}
-            />
-          )}
-        </div>
-        <aside className="w-full lg:w-80 bg-white">
-          {playerData && (
-            <GameHUD
-              playerData={playerData}
-              gameState={gameState}
-              partySprouts={partySprouts}
-              systemLog={systemLog}
-              currentScreen={currentScreen}
-              nearbyPlayers={nearbyPlayers}
-              onOpenSprouts={() => setShowSprouts(true)}
-              onOpenInventory={() => setShowInventory(true)}
-              onOpenMultiplayer={() => setShowMultiplayer(true)}
-            />
-          )}
-        </aside>
-      </main>
+      {/* FIXED GAME SCREEN AT TOP */}
+      <div className="flex-none h-screen bg-neutral-50 border-b-4 lg:border-b-0 border-black flex items-center justify-center p-4 overflow-hidden">
+        {gameState === "overworld" && playerData && (
+          <GameCanvas
+            playerData={playerData}
+            onEncounter={handleEncounter}
+            onPlayerMove={(pos) =>
+              setPlayerData((prev) =>
+                prev
+                  ? { ...prev, position_x: pos.x, position_y: pos.y }
+                  : prev,
+              )
+            }
+            onScreenChange={(screen) => setCurrentScreen(screen)}
+            onNearbyPlayersUpdate={(players) => setNearbyPlayers(players)}
+            onPlayerClick={handlePlayerClick}
+          />
+        )}
+        {gameState === "combat" && currentEncounter && (
+          <CombatArena
+            playerData={playerData}
+            sproutSpecies={currentEncounter}
+            partySprouts={partySprouts}
+            onCombatEnd={handleCombatEnd}
+          />
+        )}
+      </div>
+
+      {/* SCROLLABLE INFO PANEL */}
+      <aside className="flex-1 w-full bg-white border-t-4 border-black overflow-y-auto">
+        {playerData && (
+          <GameHUD
+            playerData={playerData}
+            gameState={gameState}
+            partySprouts={partySprouts}
+            systemLog={systemLog}
+            currentScreen={currentScreen}
+            nearbyPlayers={nearbyPlayers}
+            onOpenSprouts={() => setShowSprouts(true)}
+            onOpenInventory={() => setShowInventory(true)}
+            onOpenMultiplayer={() => setShowMultiplayer(true)}
+          />
+        )}
+      </aside>
     </div>
   );
 }
