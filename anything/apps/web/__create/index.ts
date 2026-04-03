@@ -56,7 +56,7 @@ app.use('*', (c, next) => {
 app.use(contextStorage());
 
 app.onError((err, c) => {
-  if (c.req.method !== 'GET') {
+  if (c.req.method !== 'GET' || c.req.path.startsWith('/api')) {
     return c.json(
       {
         error: 'An error occurred in your app',
