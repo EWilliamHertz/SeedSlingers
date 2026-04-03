@@ -95,7 +95,7 @@ if (process.env.AUTH_SECRET) {
       pages: {
         signIn: '/account/signin',
         signOut: '/account/logout',
-      },
+      },      
       skipCSRFCheck,
       session: {
         strategy: 'jwt',
