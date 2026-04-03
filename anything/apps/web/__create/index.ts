@@ -56,7 +56,6 @@ app.use('*', (c, next) => {
 app.use(contextStorage());
 
 app.onError((err, c) => {
-  // Always return JSON for API errors so the frontend doesn't crash on HTML
   if (c.req.method !== 'GET' || c.req.path.startsWith('/api')) {
     return c.json(
       {
@@ -68,7 +67,6 @@ app.onError((err, c) => {
   }
   return c.html(getHTMLForErrorPage(err), 200);
 });
-
 if (process.env.CORS_ORIGINS) {
   app.use(
     '/*',
